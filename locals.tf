@@ -7,7 +7,6 @@ locals {
   private_key_path = "~/.oci/oci_api_key.flscloud.pem"
   region           = "us-ashburn-1"
 
-
   # Defaults
   # Masrer Instance Name: ${var.label_prefix}-master-${var.label_postfix}
   # Worker Instance Name: ${var.label_prefix}-worker-${count.index + 1}-${var.label_postfix}
@@ -68,9 +67,9 @@ locals {
 
 }
 
+## How to Creeate the Loadbalancer SSL Certificate
 # CA Certificate
 # openssl req -x509 -nodes -newkey rsa:4096 -keyout ca.key -out ca.crt -days 365
-
 # Serive Certifiace
 # openssl genrsa -out swarm_cert.key 2048
 # openssl req -new -sha256 -key swarm_cert.key -subj "/C=DK/ST=Copenhagen/O=FLSmidth" -out swarm_cert.csr
