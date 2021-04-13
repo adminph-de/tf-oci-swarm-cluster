@@ -3,7 +3,7 @@ resource "oci_load_balancer_load_balancer" "swarm" {
   display_name   = "${var.loadbalancer_name_prefix}-lb-${var.loadbalancer_name_postfix}"
   shape          = var.loadbalancer_shape
   subnet_ids     = [var.loadbalancer_subnet_id]
-  is_private     = "false"
+  is_private     = var.loadbalancer_is_private
   # Choose flexible as shape in var.lb_shape
   shape_details {
     #Required
@@ -73,7 +73,8 @@ resource "oci_load_balancer_listener" "oci_swarm_listener_443" {
   }
 
   ssl_configuration {
-    certificate_name = oci_load_balancer_certificate.oci_swarm_certificate[0].certificate_name
+    certificate_name        = oci_load_balancer_certificate.oci_swarm_certificate[0].certificate_name
+    verify_peer_certificate = false
   }
 
   count = var.loadbalancer_enabled == true ? 1 : 0
@@ -89,16 +90,16 @@ resource "oci_load_balancer_rule_set" "oci_swarm_rule_set_80_443" {
       operator        = "PREFIX_MATCH"
     }
     redirect_uri {
-      #host     = "{host}"
-      #path     = "/{path}"
-      #port     = "{port}"
-      protocol = "HTTPS"
-      #query    = "?{query}"
+      host     = "{host}"
+      path     = "/{path}"
+      port     = "443"
+      protocol = "https"
+      query    = "?{query}"
     }
     response_code = 301
   }
   load_balancer_id = oci_load_balancer_load_balancer.swarm[0].id
-  name             = "oci-swarm-redirect-http-https"
+  name             = "ociSwarmRedirectHttpToHttps"
   count            = var.loadbalancer_enabled == true ? 1 : 0
 }
 
@@ -116,10 +117,12 @@ resource "oci_load_balancer_hostname" "oci_swarm_hostname" {
 
 resource "oci_load_balancer_certificate" "oci_swarm_certificate" {
   #Required
-  certificate_name   = var.loadbalancer_certificate_name
+  certificate_name   = "${var.loadbalancer_certificate_name}-${random_integer.rnd.result}"
   load_balancer_id   = oci_load_balancer_load_balancer.swarm[0].id
+  ca_certificate     = var.loadbalancer_ca_certificate
+  passphrase         = var.loadbalancer_passphrase
   private_key        = var.loadbalancer_certificate_private_key
-  public_certificate = var.loadbalancer_certificate_public_certificate
+  public_certificate = var.loadbalancer_public_certificate
   lifecycle {
     create_before_destroy = true
   }

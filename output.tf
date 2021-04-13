@@ -20,3 +20,6 @@ output "loadbalancer_ip_url" {
 output "loadbalancer_portainer_url" {
   value = "https://${module.loadbalancer.balancer_hostname[0].hostname}"
 }
+output "loadbalancer" {
+  value = "Before you can access the Portainer URL, you need to add '${format(lookup(module.loadbalancer.load_balancer_swarm[0].ip_address_details[0], "ip_address"))} A-RECORD ${element(split(".", module.loadbalancer.balancer_hostname[0].hostname), 0)}' to your DNS zone: ${trimprefix(element(split("${element(split(".", module.loadbalancer.balancer_hostname[0].hostname), 0)}.", module.loadbalancer.balancer_hostname[0].hostname), 1), module.loadbalancer.balancer_hostname[0].hostname)}"
+}

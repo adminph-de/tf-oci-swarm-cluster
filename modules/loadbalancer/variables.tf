@@ -4,6 +4,13 @@ variable "loadbalancer_enabled" {
   type        = bool
 }
 
+variable "loadbalancer_is_private" {
+  description = "Type of the Loadbalancer. Set true for private mode (default not private = false)"
+  default     = false
+  type        = bool
+}
+
+
 variable "loadbalancer_compartment_id" {
   description = "whether to create the instance"
   type        = string
@@ -49,11 +56,24 @@ variable "loadbalancer_certificate_name" {
   description = "The shape of the instance instance."
   type        = string
 }
+
+variable "loadbalancer_ca_certificate" {
+  description = "The shape of the instance instance."
+  type        = string
+}
+
 variable "loadbalancer_certificate_private_key" {
   description = "The shape of the instance instance."
   type        = string
 }
-variable "loadbalancer_certificate_public_certificate" {
+
+variable "loadbalancer_passphrase" {
+  description = "The shape of the instance instance."
+  type        = string
+  default     = null
+}
+
+variable "loadbalancer_public_certificate" {
   description = "The shape of the instance instance."
   type        = string
 }

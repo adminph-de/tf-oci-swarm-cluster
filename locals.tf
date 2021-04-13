@@ -50,15 +50,28 @@ locals {
   worker_image_id       = ""
   worker_shape          = {}
 
-  # Loadbalancer
-  lb_enable                         = true
-  lb_compartment_id                 = ""
-  lb_vcn_id                         = ""
-  lb_subnet_id                      = ""
-  lb_shape                          = "flexible"
-  lb_host_name                      = "oci-swarm.cloud.flsmidth.com"
-  lb_certificate_name               = "wildcard_cloud_flsmidth_com"
-  lb_certificate_private_key        = file("./keys/cert.key")
-  lb_certificate_public_certificate = file("./keys/cert.pem")
+  # Swarm OCI Loadbalancer
+  lb_enable         = true
+  lb_is_private     = false
+  lb_compartment_id = ""
+  # if you use public Loadbalancer, be sure lb_is_private is set to false
+  # and choose a VCN and Subnet that provides Public IPs. Otherwiese the deployment fails.
+  lb_vcn_id                  = "ocid1.vcn.oc1.iad.amaaaaaanilxufianppjygzpznnksymz6lguuboshu6smxe46low3dx3f5vq"    # Region: us-ashburn-1,oc2-vcn-rocky-hpc-hub-s
+  lb_subnet_id               = "ocid1.subnet.oc1.iad.aaaaaaaaujiza35rvufevk6jd4q26nglzw7i6dkkjkbmkf47mq6aflel5abq" # Region: us-ashburn-1,oc2-sub-rocky-hpc-hub-1-s
+  lb_shape                   = "flexible"
+  lb_host_name               = "oci-swarm.cloud.flsmidth.com"
+  lb_certificate_name        = "ociSwarmSelfSigned"
+  lb_ca_certificate          = file("./keys/ca.crt")
+  lb_passphrase              = null
+  lb_certificate_private_key = file("./keys/swarm_cert.key")
+  lb_public_certificate      = file("./keys/swarm_cert.crt")
 
 }
+
+# CA Certificate
+# openssl req -x509 -nodes -newkey rsa:4096 -keyout ca.key -out ca.crt -days 365
+
+# Serive Certifiace
+# openssl genrsa -out swarm_cert.key 2048
+# openssl req -new -sha256 -key swarm_cert.key -subj "/C=DK/ST=Copenhagen/O=FLSmidth" -out swarm_cert.csr
+# openssl x509 -req -in swarm_cert.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out swarm_cert.crt -days 500 -sha256
