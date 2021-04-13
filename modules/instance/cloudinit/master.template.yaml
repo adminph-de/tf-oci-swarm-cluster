@@ -1,0 +1,32 @@
+#cloud-config
+package_upgrade: ${instance_upgrade}
+timezone: ${timezone}
+
+write_files:
+  - path: "/root/instance.sh"
+    permissions: "0700"
+    encoding: "gzip+base64"
+    content: |
+      ${master_setup_sh_content}
+  - path: "/var/nfsshare/.docker/note.lable.sh"
+    permissions: "0755"
+    encoding: "gzip+base64"
+    content: |
+      ${note_lable_sh_content}
+  - path: "/var/nfsshare/.docker/swarm.sh"
+    permissions: "0700"
+    encoding: "gzip+base64"
+    content: |
+      ${swarm_sh_content}
+  - path: "/var/nfsshare/.docker/swarm.yaml"
+    permissions: "0600"
+    encoding: "gzip+base64"
+    content: |
+      ${swarm_yaml_content}
+
+runcmd:
+ - bash /root/instance.sh
+ - cat /root/cloud-init-output.log > /home/opc/instance.finish
+
+final_message: "The system is finally up, after $UPTIME seconds"
+output: {all: '| tee -a /root/cloud-init-output.log'}
