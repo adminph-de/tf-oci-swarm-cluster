@@ -3,16 +3,14 @@ resource "oci_core_instance" "instance" {
   availability_domain = element(local.ad_names, (var.instance_availability_domain - 1))
   compartment_id      = var.instance_compartment_id
   display_name        = var.instance_node_type == "master" ? "${var.instance_label_prefix}-master-${var.instance_label_postfix}" : "${var.instance_label_prefix}-worker-${var.instance_label_postfix}"
-  #display_name        = var.instance_label_prefix == "none" ? "vm-instance" : "${var.instance_label_prefix}-${var.instance_label_postfix}"
   agent_config {
     is_management_disabled = true
   }
   create_vnic_details {
     assign_public_ip = false
     display_name     = var.instance_node_type == "master" ? "${var.instance_label_prefix}-master-${var.instance_label_postfix}" : "${var.instance_label_prefix}-worker-${var.instance_label_postfix}"
-    #display_name     = var.instance_label_prefix == "none" ? "vm-instance" : "${var.instance_label_prefix}-${var.instance_label_postfix}"
-    nsg_ids   = var.instance_nsg_ids
-    subnet_id = var.instance_subnet_id
+    nsg_ids          = var.instance_nsg_ids
+    subnet_id        = var.instance_subnet_id
   }
   launch_options {
     boot_volume_type = "PARAVIRTUALIZED"

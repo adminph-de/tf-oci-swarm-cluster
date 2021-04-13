@@ -121,7 +121,7 @@ data "template_file" "swarm_yaml" {
   template = file("${path.module}/scripts/swarm.yaml")
   count    = var.instance_enabled == true && var.instance_node_type == "master" ? 1 : 0
   vars = {
-    oci_swarm_traefik_fqdn = var.swarm_traefik_fqdn
+    oci_swarm_fqdn_portainer = var.swarm_oci_fqdn_portainer
   }
 }
 

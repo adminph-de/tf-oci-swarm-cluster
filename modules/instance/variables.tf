@@ -16,6 +16,7 @@ variable "instance_label_postfix" {
   default     = ""
 }
 
+
 # ---------------------------------------------------------------------------------------------------------------------
 # GENERATE INSTANCE: instance
 # ---------------------------------------------------------------------------------------------------------------------
@@ -76,12 +77,6 @@ variable "instance_image_id" {
   description = "Provide a custom image id for the instance host or leave as Autonomous."
   default     = "Oracle"
   type        = string
-}
-
-variable "instance_instance_principal" {
-  description = "whether to enable instance_principal on the instance"
-  default     = false
-  type        = bool
 }
 
 variable "instance_shape" {
@@ -180,8 +175,9 @@ variable "swarm_oci_repo_auth_secret_encypted" {
   type        = string
 }
 
-variable "swarm_traefik_fqdn" {
+variable "swarm_oci_fqdn_portainer" {
   description = "The URL (fqdn) where you can access the Traefic Dashboard."
   default     = "oci-traefik.mydomain.com"
   type        = string
 }
+
