@@ -21,24 +21,13 @@ data "oci_identity_regions" "home_region" {
 }
 
 # --------------------------------------------------------------------------------------------
-# NETWORK
+# MISC
 # --------------------------------------------------------------------------------------------
 
-# data "oci_core_vcn" "vcn" {
-#   vcn_id = var.instance_vcn_id
-# }
-# data "oci_core_vnic_attachments" "instance_vnics_attachments" {
-#   availability_domain = element(data.template_file.ad_names.*.rendered, (var.instance_availability_domain - 1))
-#   compartment_id      = var.instance_compartment_id
-#   instance_id         = oci_core_instance_configuration.swarm_worker[0].id
-#   depends_on          = [oci_core_instance_configuration.swarm_worker]
-#   count               = var.instance_enabled == true ? 1 : 0
-# }
-# data "oci_core_vnic" "instance_vnic" {
-#   vnic_id    = lookup(data.oci_core_vnic_attachments.instance_vnics_attachments[0].vnic_attachments[0], "vnic_id")
-#   depends_on = [oci_core_instance_configuration.swarm_worker]
-#   count      = var.instance_enabled == true ? 1 : 0
-# }
+resource "random_integer" "rnd" {
+  min = 1
+  max = 9999
+}
 
 # --------------------------------------------------------------------------------------------
 # INSTANCE
