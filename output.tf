@@ -18,22 +18,21 @@ output "swarm_master_display_name" {
 output "swarm_master_ip" {
   value = module.master.instance_private_ip
 }
-output "swarm_worker_display_name" {
+output "swarm_single_worker_instance_display_names" {
   value = module.worker[*].instance_display_name
 }
-# output "swarm_worker_ip" {
-#   value = module.worker[*].instance_private_ip
-# }
+output "swarm_single_worker_instance_ips" {
+  value = module.worker[*].instance_private_ip
+}
 
 output "swarm_pool_worker_display_name" {
-  # value = module.pool.core_instance_pool_worker[0].display_name
   value = module.pool.oci_core_instance_pool[0].display_name
 }
 output "swarm_pool_worker_instnace_count" {
-  value = module.pool.core_instance_pool_worker[0].actual_size
+  value = module.pool.core_instance_pool_worker[0].size
 }
 
 output "swarm_pool_worker_instnaces_name" {
-  value = flatten(split(",", join(",", lookup(module.pool.oci_core_instance_pool_instances[0], "instances", null).*.display_name)))
+  value = local.worker_pool_node_count > 0 ? flatten(split(",", join(",", lookup(module.pool.oci_core_instance_pool_instances[0], "instances", null).*.display_name))) : null
 }
 

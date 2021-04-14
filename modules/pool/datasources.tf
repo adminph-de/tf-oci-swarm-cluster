@@ -45,7 +45,7 @@ data "oci_core_instance" "instance" {
   instance_id = data.oci_core_instance_pool_instances.pool_instances[0].instances[count.index].id
   depends_on  = [oci_core_instance_configuration.swarm_worker]
   
-  count = var.instance_enabled == true ? length(data.oci_core_instance_pool_instances.pool_instances) : 0
+  count = var.instance_enabled == true && var.instance_swarm_worker_count > 0 ? length(data.oci_core_instance_pool_instances.pool_instances) : 0
 }
 
 data "oci_core_instance_pool_instances" "pool_instances" {
@@ -53,7 +53,7 @@ data "oci_core_instance_pool_instances" "pool_instances" {
   instance_pool_id = oci_core_instance_pool.worker_pool[0].id
   depends_on  = [oci_core_instance_pool.worker_pool]
   
-  count = var.instance_enabled == true ? 1 : 0
+  count = var.instance_enabled == true ? 1 : 0 
 }
 
 data "oci_core_instance_pool" "instance" {

@@ -8,8 +8,8 @@ locals {
   region           = "us-ashburn-1"
 
   # Defaults
-  label_prefix        = "oc2-swarm-hpc"
-  label_postfix       = "s"
+  label_prefix        = "oc2-hpc-swarm"
+  label_postfix       = "p"
   ssh_public_key      = ""
   ssh_public_key_path = "./keys/webinit_rsa.pub"
   timezone            = "UTC"
@@ -49,7 +49,7 @@ locals {
 
   # Swarm pooled WORKER Node(s)
   worker_pool_enabled        = true
-  worker_pool_node_count     = 0
+  worker_pool_node_count     = 5
   worker_pool_compartment_id = ""
   worker_pool_vcn_id         = ""
   worker_pool_subnet_id      = ""
