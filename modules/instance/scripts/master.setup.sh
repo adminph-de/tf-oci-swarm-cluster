@@ -86,7 +86,7 @@ cat << EOF > /var/nfsshare/hosts
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 EOF
 echo "`hostname --ip-address | awk '{ print $1 }'` `hostname --fqdn` `hostname --short`" >> /var/nfsshare/hosts
-rm /etc/hosts
+rm -f /etc/hosts
 ln -s /var/nfsshare/hosts /etc/hosts
 
 if [ "${oci_swarm_repo_enable}" = true ]; then

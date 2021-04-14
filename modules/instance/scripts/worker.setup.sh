@@ -69,7 +69,7 @@ chown -R opc.opc /home/opc/.docker
 chmod 600 /home/opc/.docker/config.json 
 
 echo "`hostname --ip-address | awk '{ print $1 }'` `hostname --fqdn` `hostname --short`" >> /var/nfsshare/hosts
-rm /etc/hosts
+rm -f /etc/hosts
 ln -s /var/nfsshare/hosts /etc/hosts
 
 # Open Firewall for Docker SWARM comunication

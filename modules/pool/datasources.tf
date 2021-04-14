@@ -40,22 +40,38 @@ data "oci_core_images" "oracle_images" {
   shape                    = lookup(var.instance_shape, "shape", "VM.Standard.E2.2")
   sort_by                  = "TIMECREATED"
 }
+
 data "oci_core_instance" "instance" {
-  instance_id = oci_core_instance_configuration.swarm_worker[0].id
+  instance_id = data.oci_core_instance_pool_instances.pool_instances[0].instances[count.index].id
   depends_on  = [oci_core_instance_configuration.swarm_worker]
-  count       = var.instance_enabled == true ? 1 : 0
+  
+  count = var.instance_enabled == true ? length(data.oci_core_instance_pool_instances.pool_instances) : 0
+}
+
+data "oci_core_instance_pool_instances" "pool_instances" {
+  compartment_id = var.instance_compartment_id
+  instance_pool_id = oci_core_instance_pool.worker_pool[0].id
+  depends_on  = [oci_core_instance_pool.worker_pool]
+  
+  count = var.instance_enabled == true ? 1 : 0
+}
+
+data "oci_core_instance_pool" "instance" {
+  instance_pool_id = oci_core_instance_pool.worker_pool[0].id
+  depends_on  = [oci_core_instance_pool.worker_pool]
+  
+  count = var.instance_enabled == true ? 1 : 0
 }
 
 data "template_cloudinit_config" "instance_worker" {
   gzip          = true
   base64_encode = true
-
   part {
     filename     = "operator.yaml"
     content_type = "text/cloud-config"
     content      = data.template_file.worker_cloud_init[0].rendered
   }
-  count = var.instance_enabled == true && var.instance_swarm_worker_count >= 1 ? 1 : 0
+  count = var.instance_enabled == true ? 1 : 0
 }
 
 # --------------------------------------------------------------------------------------------
@@ -70,7 +86,7 @@ data "template_file" "worker_setup" {
     oci_repo_server               = var.swarm_oci_repo_server
     oci_repo_auth_secret_encypted = var.swarm_oci_repo_auth_secret_encypted
   }
-  count = var.instance_enabled == true && var.instance_swarm_worker_count >= 1 ? 1 : 0
+  count = var.instance_enabled == true ? 1 : 0
 }
 
 data "template_file" "worker_cloud_init" {
@@ -80,5 +96,5 @@ data "template_file" "worker_cloud_init" {
     timezone                = var.instance_timezone
     worker_setup_sh_content = base64gzip(data.template_file.worker_setup[0].rendered)
   }
-  count = var.instance_enabled == true && var.instance_swarm_worker_count >= 1 ? 1 : 0
+  count = var.instance_enabled == true ? 1 : 0
 }

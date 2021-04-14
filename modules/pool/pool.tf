@@ -8,7 +8,7 @@ resource "oci_core_instance_configuration" "swarm_worker" {
     launch_details {
       availability_domain = element(data.template_file.ad_names.*.rendered, (var.instance_availability_domain - 1))
       compartment_id      = var.instance_compartment_id
-      display_name        = "${var.instance_label_prefix}-${random_integer.rnd.result}-worker-${var.instance_label_postfix}"
+      display_name     = "${var.instance_label_prefix}-worker"
       launch_mode         = "NATIVE"
       metadata = {
         ssh_authorized_keys = var.instance_ssh_public_key != "" ? var.instance_ssh_public_key : file(var.instance_ssh_public_key_path)
@@ -24,16 +24,12 @@ resource "oci_core_instance_configuration" "swarm_worker" {
       }
       create_vnic_details {
         assign_public_ip = false
-        display_name     = "${var.instance_label_prefix}-worker-${var.instance_label_postfix}"
+        display_name     = "${var.instance_label_prefix}-worker"
         subnet_id        = var.instance_subnet_id
       }
       instance_options {
         are_legacy_imds_endpoints_disabled = false
       }
-      #launch_options {
-      #  boot_volume_type = "PARAVIRTUALIZED"
-      #  network_type     = "PARAVIRTUALIZED"
-      #}
       shape = lookup(var.instance_shape, "shape", "VM.Standard.E2.2")
       dynamic "shape_config" {
         for_each = length(regexall("Flex", lookup(var.instance_shape, "shape", "VM.Standard.E3.Flex"))) > 0 ? [1] : []

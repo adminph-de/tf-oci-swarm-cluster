@@ -32,22 +32,29 @@ locals {
   oci_repo_auth_secret_encypted = "ZmxzY2xvdWQvaHBjdXNlcjotWVFiXVNUZWxNcjdhbXo4Q3V0Ug=="
 
   # Swarm MASTER Node
-  # Master Instance Name: ${var.label_prefix}-master-${var.label_postfix}
   master_compartment_id = ""
   master_vcn_id         = ""
   master_subnet_id      = ""
   master_image_id       = ""
   master_shape          = {}
 
-  # Swarm WORKER Node(s)
-  # Worker Instance Name: ${var.label_prefix}-worker-${count.index + 1}-${var.label_postfix}
-  worker_enabled        = true
+  # Swarm single instance WORKER Node(s)
+  worker_enabled        = false
   worker_node_count     = 2
   worker_compartment_id = ""
   worker_vcn_id         = ""
   worker_subnet_id      = ""
   worker_image_id       = ""
   worker_shape          = {}
+
+  # Swarm pooled WORKER Node(s)
+  worker_pool_enabled        = true
+  worker_pool_node_count     = 0
+  worker_pool_compartment_id = ""
+  worker_pool_vcn_id         = ""
+  worker_pool_subnet_id      = ""
+  worker_pool_image_id       = ""
+  worker_pool_shape          = {}
 
   # Swarm OCI Loadbalancer
   # Worker Instance Name: ${var.label_prefix}-lb-${var.label_postfix}
