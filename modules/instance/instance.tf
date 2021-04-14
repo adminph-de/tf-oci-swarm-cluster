@@ -1,6 +1,6 @@
 
 resource "oci_core_instance" "instance" {
-  availability_domain = element(local.ad_names, (var.instance_availability_domain - 1))
+  availability_domain = element(data.template_file.ad_names.*.rendered, (var.instance_availability_domain - 1))
   compartment_id      = var.instance_compartment_id
   display_name        = var.instance_node_type == "master" ? "${var.instance_label_prefix}-master-${var.instance_label_postfix}" : "${var.instance_label_prefix}-worker-${var.instance_label_postfix}"
   agent_config {

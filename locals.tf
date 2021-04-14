@@ -1,6 +1,6 @@
 locals {
 
-  # Oracle Cloud Access Settions
+  # Oracle Cloud Access Settings
   tenancy_ocid     = "ocid1.tenancy.oc1..aaaaaaaazkqjclyhwbcf75aveuuvhx3gv5oy54qk2whde35vtohvfplsauma" # flscloud
   user_ocid        = "ocid1.user.oc1..aaaaaaaa6gpp2yiphzrppzdyki6xem5lmyzl2jvvl6glgcv5tird65ox2iaa"
   fingerprint      = "10:cd:a7:82:4a:7e:eb:42:d0:70:49:19:f4:f8:14:83"
@@ -8,8 +8,6 @@ locals {
   region           = "us-ashburn-1"
 
   # Defaults
-  # Masrer Instance Name: ${var.label_prefix}-master-${var.label_postfix}
-  # Worker Instance Name: ${var.label_prefix}-worker-${count.index + 1}-${var.label_postfix}
   label_prefix        = "oc2-swarm-hpc"
   label_postfix       = "s"
   ssh_public_key      = ""
@@ -34,6 +32,7 @@ locals {
   oci_repo_auth_secret_encypted = "ZmxzY2xvdWQvaHBjdXNlcjotWVFiXVNUZWxNcjdhbXo4Q3V0Ug=="
 
   # Swarm MASTER Node
+  # Master Instance Name: ${var.label_prefix}-master-${var.label_postfix}
   master_compartment_id = ""
   master_vcn_id         = ""
   master_subnet_id      = ""
@@ -41,6 +40,7 @@ locals {
   master_shape          = {}
 
   # Swarm WORKER Node(s)
+  # Worker Instance Name: ${var.label_prefix}-worker-${count.index + 1}-${var.label_postfix}
   worker_enabled        = true
   worker_node_count     = 2
   worker_compartment_id = ""
@@ -50,6 +50,7 @@ locals {
   worker_shape          = {}
 
   # Swarm OCI Loadbalancer
+  # Worker Instance Name: ${var.label_prefix}-lb-${var.label_postfix}
   lb_enable         = true
   lb_is_private     = false
   lb_compartment_id = ""
@@ -59,6 +60,13 @@ locals {
   lb_subnet_id               = "ocid1.subnet.oc1.iad.aaaaaaaaujiza35rvufevk6jd4q26nglzw7i6dkkjkbmkf47mq6aflel5abq" # Region: us-ashburn-1,oc2-sub-rocky-hpc-hub-1-s
   lb_shape                   = "flexible"
   lb_host_name               = "oci-swarm.cloud.flsmidth.com"
+  ## How to Creeate the Loadbalancer SSL Certificate
+  # CA Certificate
+  # openssl req -x509 -nodes -newkey rsa:4096 -keyout ca.key -out ca.crt -days 365
+  # Serive Certifiace
+  # openssl genrsa -out swarm_cert.key 2048
+  # openssl req -new -sha256 -key swarm_cert.key -subj "/C=DK/ST=Copenhagen/O=FLSmidth" -out swarm_cert.csr
+  # openssl x509 -req -in swarm_cert.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out swarm_cert.crt -days 500 -sha256s
   lb_certificate_name        = "ociSwarmSelfSigned"
   lb_ca_certificate          = file("./keys/ca.crt")
   lb_passphrase              = null
@@ -66,11 +74,3 @@ locals {
   lb_public_certificate      = file("./keys/swarm_cert.crt")
 
 }
-
-## How to Creeate the Loadbalancer SSL Certificate
-# CA Certificate
-# openssl req -x509 -nodes -newkey rsa:4096 -keyout ca.key -out ca.crt -days 365
-# Serive Certifiace
-# openssl genrsa -out swarm_cert.key 2048
-# openssl req -new -sha256 -key swarm_cert.key -subj "/C=DK/ST=Copenhagen/O=FLSmidth" -out swarm_cert.csr
-# openssl x509 -req -in swarm_cert.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out swarm_cert.crt -days 500 -sha256

@@ -78,3 +78,36 @@ module "loadbalancer" {
   loadbalancer_public_certificate      = local.lb_public_certificate
 
 }
+
+
+module "pool" {
+  source = "./modules/pool"
+
+  instance_enabled = local.worker_enabled
+
+  instance_tenancy_ocid        = local.tenancy_ocid
+  instance_region              = local.region
+  instance_swarm_worker_count  = local.worker_node_count
+  instance_swarm_master_ip     = module.master.instance_private_ip
+  instance_label_prefix        = local.label_prefix
+  instance_label_postfix       = local.label_postfix
+  instance_compartment_id      = local.worker_compartment_id != "" ? local.worker_compartment_id : local.compartment_id
+  instance_availability_domain = 1
+  instance_vcn_id              = (local.worker_vcn_id != "") ? local.worker_vcn_id : local.vcn_id
+  instance_subnet_id           = (local.worker_subnet_id != "") ? local.worker_subnet_id : local.subnet_id
+  instance_nat_route_id        = ""
+  instance_nsg_ids             = []
+  instance_image_id            = (local.worker_image_id != "") ? local.worker_image_id : local.image_id
+  instance_shape               = (local.worker_shape != {}) ? local.worker_shape : local.shape
+  instance_upgrade             = true
+  instance_ssh_public_key      = local.ssh_public_key
+  instance_ssh_public_key_path = local.ssh_public_key_path
+  instance_timezone            = local.timezone
+
+  swarm_oci_repo_enable               = local.oci_repo_enable
+  swarm_oci_repo_server               = local.oci_repo_server
+  swarm_oci_repo_username             = local.oci_repo_username
+  swarm_oci_repo_auth_secret          = local.oci_repo_auth_secret
+  swarm_oci_repo_auth_secret_encypted = local.oci_repo_auth_secret_encypted
+
+}
