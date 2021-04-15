@@ -14,11 +14,32 @@ variable "timezone" {}
 variable "compartment_id" {}
 variable "vcn_id" {}
 variable "subnet_id" {}
-variable "image_id" {}
-variable "shape" {}
+variable "image_id" {
+  type        = string
+  default     = "Oracle"
+  description = "Default is set to Oracle Linux."
+}
+variable "shape" {
+  type = object({
+    shape            = string
+    ocpus            = number
+    memory           = number
+    boot_volume_size = number
+  })
+  default = {
+    shape            = "VM.Standard.E3.Flex",
+    ocpus            = 2,
+    memory           = 12,
+    boot_volume_size = 50
+  }
+  description = "Instance Shape as FLEX image (recommended). In case of non FLEX, don't set the ocpus and memory and use the shape name only."
+}
 
 # Integrate a provate OCI Repo (optional)
-variable "oci_repo_enable" {}
+variable "oci_repo_enable" {
+  default = true
+  type    = bool
+}
 variable "oci_repo_server" {}
 variable "oci_repo_username" {}
 variable "oci_repo_auth_secret" {}
@@ -36,12 +57,15 @@ variable "master_os_upgrade" {
   type    = bool
 }
 variable "master_ad" {
-  default = true
+  default = 1
   type    = number
 }
 
 # Swarm pooled WORKER Node(s)
-variable "worker_enabled" {}
+variable "worker_enabled" {
+  default = true
+  type    = bool
+}
 variable "worker_node_count" {}
 variable "worker_compartment_id" {}
 variable "worker_vcn_id" {}
@@ -54,13 +78,19 @@ variable "worker_os_upgrade" {
   type    = bool
 }
 variable "worker_ad" {
-  default = true
+  default = 1
   type    = number
 }
 
 # Swarm OCI Loadbalancer
-variable "lb_enable" {}
-variable "lb_is_private" {}
+variable "lb_enable" {
+  default = true
+  type    = bool
+}
+variable "lb_is_private" {
+  default = true
+  type    = bool
+}
 variable "lb_compartment_id" {}
 variable "lb_vcn_id" {}
 variable "lb_subnet_id" {}

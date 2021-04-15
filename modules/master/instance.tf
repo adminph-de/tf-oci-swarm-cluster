@@ -8,7 +8,6 @@ resource "oci_core_instance" "instance" {
   create_vnic_details {
     assign_public_ip = false
     display_name     = "${var.instance_label_prefix}-master-${var.instance_label_postfix}"
-    nsg_ids          = var.instance_nsg_ids
     subnet_id        = var.instance_subnet_id
   }
   launch_options {

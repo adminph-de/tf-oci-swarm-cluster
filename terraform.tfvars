@@ -14,7 +14,7 @@
   compartment_id      = "ocid1.compartment.oc1..aaaaaaaaensqjpvvvudpci3mubpsh3k5am7ftujsngn3reh3fjgpja2h37sq" # PoC:HPC:ROCKY:Applications
   vcn_id              = "ocid1.vcn.oc1.iad.amaaaaaanilxufiaatesgwfvnmux2t5eukj5fh64uw3fe5hg7z5fb46ejbcq"
   subnet_id           = "ocid1.subnet.oc1.iad.aaaaaaaarfdqjbbtcdrecmmdmri63c6odcqfkn4x3jfnwz3ac2viclijpzjq"
-  image_id            = "ocid1.image.oc1.iad.aaaaaaaanduaanydig5trp6s2pw2mn5lchwyqramyfjzezcarcdqry7yeo7a" # Region: us-ashburn-1, OS: CentOS-7-2021.03.16-0)
+  image_id            = "ocid1.image.oc1.iad.aaaaaaaanduaanydig5trp6s2pw2mn5lchwyqramyfjzezcarcdqry7yeo7a" # Region: us-ashburn-1, OS: CentOS-7-2021.03.16-0) default = Oracle
   shape = {
     shape            = "VM.Standard.E3.Flex",
     ocpus            = 2,
@@ -30,33 +30,33 @@
   oci_repo_auth_secret_encypted = "ZmxzY2xvdWQvaHBjdXNlcjotWVFiXVNUZWxNcjdhbXo4Q3V0Ug=="
 
   # Swarm MASTER Node
-  master_compartment_id = ""
+  master_compartment_id = ""   # optional, default = var.compartment_id
   master_ad             = 1
-  master_vcn_id         = ""
-  master_subnet_id      = ""
-  master_image_id       = ""
-  master_shape          = {}
+  master_vcn_id         = ""   # optional, default = var.vnc_id
+  master_subnet_id      = ""   # optional, default = var.subnet_id
+  master_image_id       = ""   # optional, default = var.image_id
+  master_shape          = {}   # optional, default = var.shape_id
 
   # Swarm pooled WORKER Node(s)
-  worker_enabled        = true
-  worker_compartment_id = ""
+  worker_enabled        = true # optional, default = true
+  worker_compartment_id = ""   # optional, default = var.compartment_id
   worker_ad             = 1  
   worker_node_count     = 2
-  worker_vcn_id         = ""
-  worker_subnet_id      = ""
-  worker_image_id       = ""
-  worker_shape          = {}
+  worker_vcn_id         = ""   # optional, default = var.vnc_id
+  worker_subnet_id      = ""   # optional, default = var.subnet_id
+  worker_image_id       = ""   # optional, default = var.image_id
+  worker_shape          = {}   # optional, default = var.shape_id
 
   # Swarm OCI Loadbalancer
-  lb_enable         = true
-  lb_is_private     = false
+  lb_enable         = true     # optional, default = true
+  lb_is_private     = false    # optional, default = false
   lb_compartment_id = ""
   # if you use public Loadbalancer, be sure lb_is_private is set to false
   # and choose a VCN and Subnet that provides Public IPs. Otherwiese the deployment fails.
   lb_vcn_id    = "ocid1.vcn.oc1.iad.amaaaaaanilxufianppjygzpznnksymz6lguuboshu6smxe46low3dx3f5vq"    # Region: us-ashburn-1,oc2-vcn-rocky-hpc-hub-s
   lb_subnet_id = "ocid1.subnet.oc1.iad.aaaaaaaaujiza35rvufevk6jd4q26nglzw7i6dkkjkbmkf47mq6aflel5abq" # Region: us-ashburn-1,oc2-sub-rocky-hpc-hub-1-s
   lb_shape     = "flexible"
-  lb_host_name = "oci-portaine.cloud.flsmidth.com"
+  lb_host_name = "oci-portainer.cloud.flsmidth.com"
   ## How to Create a Loadbalancer SSL Certificate
   # CA Certificate
   # openssl req -x509 -nodes -newkey rsa:4096 -keyout ca.key -out ca.crt -days 3650
@@ -65,8 +65,8 @@
   # openssl req -new -sha256 -key swarm_cert.key -subj "/C=DK/ST=Copenhagen/O=FLSmidth" -out swarm_cert.csr
   # openssl x509 -req -in swarm_cert.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out swarm_cert.crt -days 365 -sha256s
   lb_certificate_name        = "ociSwarmSelfSigned"
-  lb_ca_certificate          = file("./keys/ca.crt")
+  lb_ca_certificate          = "./keys/ca.crt"
   lb_passphrase              = null
-  lb_certificate_private_key = file("./keys/swarm_cert.key")
-  lb_public_certificate      = file("./keys/swarm_cert.crt")
+  lb_certificate_private_key = "./keys/swarm_cert.key"
+  lb_public_certificate      = "./keys/swarm_cert.crt"
 

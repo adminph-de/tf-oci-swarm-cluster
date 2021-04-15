@@ -66,8 +66,8 @@ module "loadbalancer" {
   loadbalancer_swarm_backend           = module.master.instance_private_ip
   loadbalancer_certificate_name        = var.lb_certificate_name
   loadbalancer_passphrase              = var.lb_passphrase
-  loadbalancer_ca_certificate          = var.lb_ca_certificate
-  loadbalancer_certificate_private_key = var.lb_certificate_private_key
-  loadbalancer_public_certificate      = var.lb_public_certificate
+  loadbalancer_ca_certificate          = file(var.lb_ca_certificate)
+  loadbalancer_certificate_private_key = file(var.lb_certificate_private_key)
+  loadbalancer_public_certificate      = file(var.lb_public_certificate)
 
 }

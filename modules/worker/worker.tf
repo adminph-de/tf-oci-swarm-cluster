@@ -44,7 +44,7 @@ resource "oci_core_instance_configuration" "swarm_worker" {
     }
   }
   lifecycle {
-    ignore_changes = [source_details[0].image_id]
+    ignore_changes = [instance_details[0].launch_details[0].source_details[0].image_id]
   }
   count = var.instance_enabled == true ? 1 : 0
 }

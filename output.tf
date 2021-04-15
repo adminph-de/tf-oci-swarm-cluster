@@ -18,13 +18,14 @@ output "swarm_master_ip" {
   value = module.master.instance_private_ip
 }
 
-output "swarm_worker_worker_display_name" {
-  value = module.worker.oci_core_instance_worker[0].display_name
-}
-output "swarm_worker_worker_instnace_count" {
-  value = module.worker.core_instance_worker_worker[0].size
+output "swarm_worker_pool_instance_count" {
+  value = module.worker.oci_core_instance_pool.*.size
 }
 
-output "swarm_worker_worker_instnaces_name" {
-  value = local.worker_worker_node_count > 0 ? flatten(split(",", join(",", lookup(module.worker.oci_core_instance_worker_instances[0], "instances", null).*.display_name))) : null
+output "swarm_worker_pool_instance_names" {
+  value = var.worker_node_count > 0 ? flatten(split(",", join(",", lookup(module.worker.oci_core_instance_pool[0], "instances", null).*.display_name))) : null
+}
+
+output "swarm_worker_pool_name" {
+  value = module.worker.oci_core_instance_pool_instances.*.display_name
 }
