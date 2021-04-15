@@ -2,7 +2,7 @@
 exec 1> /var/log/cloud-init.script 2>&1
 
 yum -y update
-yum -y install python3 git curl wget telnet
+yum -y install python3 git curl wget telnet ansible
 pip3 install oci-cli
 
 sed -i -e 's/SELINUX=enforcing/SELINUX=disable/' /etc/selinux/config
@@ -50,9 +50,11 @@ systemctl status docker-volume-netshare.service
 
 # Create the directory that will be shared by NFS
 mkdir /var/nfsshare
+mkdir -p /var/nfsshare/.ansible
 mkdir -p /var/nfsshare/.docker
 mkdir -p /var/nfsshare/.registry
 mkdir -p /var/nfsshare/.portainer
+mkdir -p /var/nfsshare/.ssh
 # Change the permissions of the folder
 chmod -R 755 /var/nfsshare
 chown nfsnobody:nfsnobody /var/nfsshare
@@ -148,6 +150,19 @@ cat << EOF > /etc/logrotate.d/oci-swarm
 }
 EOF
 
+# Create a RSA Key for user opc
+ssh-keygen -f /home/opc/.ssh/id_rsa -t rsa -N '' -q
+chown opc.opc home/opc/.ssh/id_rsa
+chmod 600 home/opc/.ssh/id_rsa
+chmod 644 home/opc/.ssh/id_rsa.pub
+# Copy the public key to the NFS Share
+cp -f /home/opc/.ssh/id_rsa.pub /var/nfsshare/.ssh/id_rsa.pub
+
+# Write Instance Metadate
+echo "`hostname --all-ip-addresses | awk '{ print $1 }'` `curl -L -s http://169.254.169.254/opc/v1/instance/hostname` `curl -L -s http://169.254.169.254/opc/v1/instance/id` `curl -L -s http://169.254.169.254/opc/v1/instance/canonicalRegionName` `curl -L -s http://169.254.169.254/opc/v1/instance/availabilityDomain` `curl -L -s http://169.254.169.254/opc/v1/instance/shape`" >> /var/nfsshare/metadata
+
+
+# Depoy Traefik and Portainer
 exec /var/nfsshare/.docker/swarm.sh
 
 echo "Docker Swarm Master Node: `hostname --short` finalized....."

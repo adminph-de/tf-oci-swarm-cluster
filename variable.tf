@@ -62,25 +62,7 @@ variable "master_ad" {
 }
 
 # Swarm pooled WORKER Node(s)
-variable "worker_enabled" {
-  default = true
-  type    = bool
-}
-variable "worker_node_count" {}
-variable "worker_compartment_id" {}
-variable "worker_vcn_id" {}
-variable "worker_subnet_id" {}
-variable "worker_image_id" {}
-variable "worker_shape" {}
-
-variable "worker_os_upgrade" {
-  default = true
-  type    = bool
-}
-variable "worker_ad" {
-  default = 1
-  type    = number
-}
+variable "worker_map" {}
 
 # Swarm OCI Loadbalancer
 variable "lb_enable" {

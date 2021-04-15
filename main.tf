@@ -27,20 +27,22 @@ module "master" {
 module "worker" {
   source = "./modules/worker"
 
-  instance_enabled                    = var.worker_enabled
+  for_each = var.worker_map
+
+  instance_enabled                    = each.value.enabled
   instance_tenancy_ocid               = var.tenancy_ocid
   instance_region                     = var.region
-  instance_swarm_worker_count         = var.worker_node_count
+  instance_swarm_worker_count         = each.value.node_count
   instance_swarm_master_ip            = module.master.instance_private_ip
   instance_label_prefix               = var.label_prefix
-  instance_label_postfix              = var.label_postfix
-  instance_compartment_id             = var.worker_compartment_id != "" ? var.worker_compartment_id : var.compartment_id
-  instance_availability_domain        = var.worker_ad
-  instance_vcn_id                     = var.worker_vcn_id != "" ? var.worker_vcn_id : var.vcn_id
-  instance_subnet_id                  = var.worker_subnet_id != "" ? var.worker_subnet_id : var.subnet_id
-  instance_image_id                   = var.worker_image_id != "" ? var.worker_image_id : var.image_id
-  instance_shape                      = var.worker_shape != {} ? var.worker_shape : var.shape
-  instance_upgrade                    = var.worker_os_upgrade
+  instance_label_postfix              = "${each.key}-${var.label_postfix}"
+  instance_compartment_id             = each.value.compartment_id != "" ? each.value.compartment_id : var.compartment_id
+  instance_availability_domain        = each.value.ad
+  instance_vcn_id                     = each.value.vcn_id != "" ? each.value.vcn_id : var.vcn_id
+  instance_subnet_id                  = each.value.subnet_id != "" ? each.value.subnet_id : var.subnet_id
+  instance_image_id                   = each.value.image_id != "" ? each.value.image_id : var.image_id
+  instance_shape                      = each.value.shape != {} ? each.value.shape : var.shape
+  instance_upgrade                    = each.value.os_upgrade
   instance_ssh_public_key             = var.ssh_public_key
   instance_ssh_public_key_path        = var.ssh_public_key_path
   instance_timezone                   = var.timezone

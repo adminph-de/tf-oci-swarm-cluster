@@ -18,14 +18,6 @@ output "swarm_master_ip" {
   value = module.master.instance_private_ip
 }
 
-output "swarm_worker_pool_instance_count" {
-  value = module.worker.oci_core_instance_pool.*.size
-}
-
-output "swarm_worker_pool_instance_names" {
-  value = var.worker_node_count > 0 ? flatten(split(",", join(",", lookup(module.worker.oci_core_instance_pool[0], "instances", null).*.display_name))) : null
-}
-
-output "swarm_worker_pool_name" {
-  value = module.worker.oci_core_instance_pool_instances.*.display_name
+output "swarm_worker_pools" {
+  value = module.worker
 }

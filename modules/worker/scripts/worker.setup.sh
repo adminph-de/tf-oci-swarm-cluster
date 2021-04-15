@@ -2,7 +2,7 @@
 exec 1> /var/log/cloud-init.script 2>&1
 
 yum -y update
-yum -y install python3 git curl wget telnet
+yum -y install python3 git curl wget telnet ansible
 pip3 install oci-cli
 
 sed -i -e 's/SELINUX=enforcing/SELINUX=disable/' /etc/selinux/config
@@ -71,7 +71,7 @@ EOF
 chown -R opc.opc /home/opc/.docker
 chmod 600 /home/opc/.docker/config.json 
 
-echo "`hostname --ip-address | awk '{ print $1 }'` `hostname --fqdn` `hostname --short`" >> /var/nfsshare/hosts
+echo "`hostname --all-ip-addresses | awk '{ print $1 }'` `hostname --all-fqdns | awk '{ print $3 }'` `hostname --all-fqdns | awk -F '.' '{ print $1 }'` `hostname --all-fqdns | awk -F ' ' '{ print $1 }'`" >> /var/nfsshare/hosts
 rm /etc/hosts
 ln -s /var/nfsshare/hosts /etc/hosts
 
@@ -88,6 +88,12 @@ firewall-offline-cmd --add-service=https
 firewall-offline-cmd --add-port=80/tcp
 firewall-offline-cmd --add-port=443/tcp
 systemctl restart firewalld.service
+
+# add Master Node SSH Public key to authorized_keys for user opc
+cat /var/nfsshare/.ssh/id_rsa.pub >> /home/opc/.ssh/authorized_keys
+
+# Write Instance Metadate
+echo "`hostname --all-ip-addresses | awk '{ print $1 }'` `curl -L -s http://169.254.169.254/opc/v1/instance/hostname` `curl -L -s http://169.254.169.254/opc/v1/instance/id` `curl -L -s http://169.254.169.254/opc/v1/instance/canonicalRegionName` `curl -L -s http://169.254.169.254/opc/v1/instance/availabilityDomain` `curl -L -s http://169.254.169.254/opc/v1/instance/shape`" >> /var/nfsshare/metadata
 
 exec /var/nfsshare/worker.join.sh
 
