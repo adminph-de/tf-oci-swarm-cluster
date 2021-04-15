@@ -49,7 +49,7 @@ locals {
 
   # Swarm pooled WORKER Node(s)
   worker_pool_enabled        = true
-  worker_pool_node_count     = 5
+  worker_pool_node_count     = 2
   worker_pool_compartment_id = ""
   worker_pool_vcn_id         = ""
   worker_pool_subnet_id      = ""
@@ -63,17 +63,17 @@ locals {
   lb_compartment_id = ""
   # if you use public Loadbalancer, be sure lb_is_private is set to false
   # and choose a VCN and Subnet that provides Public IPs. Otherwiese the deployment fails.
-  lb_vcn_id                  = "ocid1.vcn.oc1.iad.amaaaaaanilxufianppjygzpznnksymz6lguuboshu6smxe46low3dx3f5vq"    # Region: us-ashburn-1,oc2-vcn-rocky-hpc-hub-s
-  lb_subnet_id               = "ocid1.subnet.oc1.iad.aaaaaaaaujiza35rvufevk6jd4q26nglzw7i6dkkjkbmkf47mq6aflel5abq" # Region: us-ashburn-1,oc2-sub-rocky-hpc-hub-1-s
-  lb_shape                   = "flexible"
-  lb_host_name               = "oci-swarm.cloud.flsmidth.com"
-  ## How to Creeate the Loadbalancer SSL Certificate
+  lb_vcn_id    = "ocid1.vcn.oc1.iad.amaaaaaanilxufianppjygzpznnksymz6lguuboshu6smxe46low3dx3f5vq"    # Region: us-ashburn-1,oc2-vcn-rocky-hpc-hub-s
+  lb_subnet_id = "ocid1.subnet.oc1.iad.aaaaaaaaujiza35rvufevk6jd4q26nglzw7i6dkkjkbmkf47mq6aflel5abq" # Region: us-ashburn-1,oc2-sub-rocky-hpc-hub-1-s
+  lb_shape     = "flexible"
+  lb_host_name = "oci-swarm.cloud.flsmidth.com"
+  ## How to Create a Loadbalancer SSL Certificate
   # CA Certificate
-  # openssl req -x509 -nodes -newkey rsa:4096 -keyout ca.key -out ca.crt -days 365
+  # openssl req -x509 -nodes -newkey rsa:4096 -keyout ca.key -out ca.crt -days 3650
   # Serive Certifiace
   # openssl genrsa -out swarm_cert.key 2048
   # openssl req -new -sha256 -key swarm_cert.key -subj "/C=DK/ST=Copenhagen/O=FLSmidth" -out swarm_cert.csr
-  # openssl x509 -req -in swarm_cert.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out swarm_cert.crt -days 500 -sha256s
+  # openssl x509 -req -in swarm_cert.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out swarm_cert.crt -days 365 -sha256s
   lb_certificate_name        = "ociSwarmSelfSigned"
   lb_ca_certificate          = file("./keys/ca.crt")
   lb_passphrase              = null
