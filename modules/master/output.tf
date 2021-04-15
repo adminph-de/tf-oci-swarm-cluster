@@ -4,5 +4,3 @@ output "instance_private_ip" {
 output "instance_display_name" {
   value = join(",", data.oci_core_instance.instance.*.display_name)
 }
-
-

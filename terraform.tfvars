@@ -1,5 +1,3 @@
-locals {
-
   # Oracle Cloud Access Settings
   tenancy_ocid     = "ocid1.tenancy.oc1..aaaaaaaazkqjclyhwbcf75aveuuvhx3gv5oy54qk2whde35vtohvfplsauma" # flscloud
   user_ocid        = "ocid1.user.oc1..aaaaaaaa6gpp2yiphzrppzdyki6xem5lmyzl2jvvl6glgcv5tird65ox2iaa"
@@ -33,31 +31,23 @@ locals {
 
   # Swarm MASTER Node
   master_compartment_id = ""
+  master_ad             = 1
   master_vcn_id         = ""
   master_subnet_id      = ""
   master_image_id       = ""
   master_shape          = {}
 
-  # Swarm single instance WORKER Node(s)
-  worker_enabled        = false
-  worker_node_count     = 2
+  # Swarm pooled WORKER Node(s)
+  worker_enabled        = true
   worker_compartment_id = ""
+  worker_ad             = 1  
+  worker_node_count     = 2
   worker_vcn_id         = ""
   worker_subnet_id      = ""
   worker_image_id       = ""
   worker_shape          = {}
 
-  # Swarm pooled WORKER Node(s)
-  worker_pool_enabled        = true
-  worker_pool_node_count     = 2
-  worker_pool_compartment_id = ""
-  worker_pool_vcn_id         = ""
-  worker_pool_subnet_id      = ""
-  worker_pool_image_id       = ""
-  worker_pool_shape          = {}
-
   # Swarm OCI Loadbalancer
-  # Worker Instance Name: ${var.label_prefix}-lb-${var.label_postfix}
   lb_enable         = true
   lb_is_private     = false
   lb_compartment_id = ""
@@ -66,7 +56,7 @@ locals {
   lb_vcn_id    = "ocid1.vcn.oc1.iad.amaaaaaanilxufianppjygzpznnksymz6lguuboshu6smxe46low3dx3f5vq"    # Region: us-ashburn-1,oc2-vcn-rocky-hpc-hub-s
   lb_subnet_id = "ocid1.subnet.oc1.iad.aaaaaaaaujiza35rvufevk6jd4q26nglzw7i6dkkjkbmkf47mq6aflel5abq" # Region: us-ashburn-1,oc2-sub-rocky-hpc-hub-1-s
   lb_shape     = "flexible"
-  lb_host_name = "oci-swarm.cloud.flsmidth.com"
+  lb_host_name = "oci-portaine.cloud.flsmidth.com"
   ## How to Create a Loadbalancer SSL Certificate
   # CA Certificate
   # openssl req -x509 -nodes -newkey rsa:4096 -keyout ca.key -out ca.crt -days 3650
@@ -80,4 +70,3 @@ locals {
   lb_certificate_private_key = file("./keys/swarm_cert.key")
   lb_public_certificate      = file("./keys/swarm_cert.crt")
 
-}

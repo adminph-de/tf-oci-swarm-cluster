@@ -65,25 +65,13 @@ data "template_cloudinit_config" "instance_master" {
     content_type = "text/cloud-config"
     content      = data.template_file.master_cloud_init[0].rendered
   }
-  count = var.instance_enabled == true && var.instance_node_type == "master" ? 1 : 0
-}
-data "template_cloudinit_config" "instance_worker" {
-  gzip          = true
-  base64_encode = true
-
-  part {
-    filename     = "operator.yaml"
-    content_type = "text/cloud-config"
-    content      = data.template_file.worker_cloud_init[0].rendered
-  }
-  count = var.instance_enabled == true && var.instance_node_type == "worker" && var.instance_swarm_worker_count >= 1 ? 1 : 0
+  count = var.instance_enabled == true ? 1 : 0
 }
 
 # --------------------------------------------------------------------------------------------
 # CLOUD-INIT: Instance Scripts
 # --------------------------------------------------------------------------------------------
 
-# master.template.yaml
 data "template_file" "master_cloud_init" {
   template = file("${path.module}/cloudinit/master.template.yaml")
   vars = {
@@ -94,7 +82,7 @@ data "template_file" "master_cloud_init" {
     swarm_sh_content        = base64gzip(data.template_file.swarm_sh[0].rendered)
     swarm_yaml_content      = base64gzip(data.template_file.swarm_yaml[0].rendered)
   }
-  count = var.instance_enabled == true && var.instance_node_type == "master" ? 1 : 0
+  count = var.instance_enabled == true ? 1 : 0
 }
 data "template_file" "master_setup" {
   template = file("${path.module}/scripts/master.setup.sh")
@@ -107,41 +95,20 @@ data "template_file" "master_setup" {
     oci_repo_auth_secret_encypted = var.swarm_oci_repo_auth_secret_encypted
 
   }
-  count = var.instance_enabled == true && var.instance_node_type == "master" ? 1 : 0
+  count = var.instance_enabled == true ? 1 : 0
 }
 data "template_file" "note_lable_sh" {
   template = file("${path.module}/scripts/node.lable.sh")
-  count    = var.instance_enabled == true && var.instance_node_type == "master" ? 1 : 0
+  count    = var.instance_enabled == true ? 1 : 0
 }
 data "template_file" "swarm_sh" {
   template = file("${path.module}/scripts/swarm.sh")
-  count    = var.instance_enabled == true && var.instance_node_type == "master" ? 1 : 0
+  count    = var.instance_enabled == true ? 1 : 0
 }
 data "template_file" "swarm_yaml" {
   template = file("${path.module}/scripts/swarm.yaml")
-  count    = var.instance_enabled == true && var.instance_node_type == "master" ? 1 : 0
+  count    = var.instance_enabled == true ? 1 : 0
   vars = {
     oci_swarm_fqdn_portainer = var.swarm_oci_fqdn_portainer
   }
-}
-
-# worker.template.sh
-data "template_file" "worker_cloud_init" {
-  template = file("${path.module}/cloudinit/worker.template.yaml")
-  vars = {
-    instance_upgrade        = var.instance_upgrade
-    timezone                = var.instance_timezone
-    worker_setup_sh_content = base64gzip(data.template_file.worker_setup[0].rendered)
-  }
-  count = var.instance_enabled == true && var.instance_node_type == "worker" && var.instance_swarm_worker_count >= 1 ? 1 : 0
-}
-data "template_file" "worker_setup" {
-  template = file("${path.module}/scripts/worker.setup.sh")
-  vars = {
-    oci_swarm_master_ip           = var.instance_swarm_master_ip
-    oci_swarm_region              = var.instance_region
-    oci_repo_server               = var.swarm_oci_repo_server
-    oci_repo_auth_secret_encypted = var.swarm_oci_repo_auth_secret_encypted
-  }
-  count = var.instance_enabled == true && var.instance_node_type == "worker" && var.instance_swarm_worker_count >= 1 ? 1 : 0
 }

@@ -1,7 +1,7 @@
 provider "oci" {
-  tenancy_ocid     = local.tenancy_ocid
-  user_ocid        = local.user_ocid
-  fingerprint      = local.fingerprint
-  private_key_path = local.private_key_path
-  region           = local.region
+  tenancy_ocid     = var.tenancy_ocid
+  user_ocid        = var.user_ocid
+  fingerprint      = var.fingerprint
+  private_key_path = var.private_key_path
+  region           = var.region
 }

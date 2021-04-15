@@ -53,16 +53,6 @@ variable "instance_subnet_id" {
   type        = string
 }
 
-variable "instance_nat_route_id" {
-  description = "the id of the route table to the nat gateway."
-  type        = string
-}
-variable "instance_nsg_ids" {
-  description = "Optional list of network security groups that the instance will be part of"
-  type        = list(string)
-  default     = []
-}
-
 variable "instance_image_id" {
   description = "Provide a custom image id for the instance host or leave as Autonomous."
   default     = "Oracle"

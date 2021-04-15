@@ -16,7 +16,6 @@ variable "instance_label_postfix" {
   default     = ""
 }
 
-
 # ---------------------------------------------------------------------------------------------------------------------
 # GENERATE INSTANCE: instance
 # ---------------------------------------------------------------------------------------------------------------------
@@ -25,16 +24,6 @@ variable "instance_enabled" {
   description = "whether to create the instance"
   default     = false
   type        = bool
-}
-
-variable "instance_node_type" {
-  description = "Swarm Node Type (master/worker)"
-  default     = "master"
-  type        = string
-  validation {
-    condition     = can(regex("^(worker|master)$", var.instance_node_type))
-    error_message = "You need to defind the insance_node_type as: master or worker. The value you defiend is not an allowed docker swarm node type (Only one Type of: master node is only allowed in each docker swarm cluster)."
-  }
 }
 
 variable "instance_region" {
@@ -61,16 +50,6 @@ variable "instance_vcn_id" {
 variable "instance_subnet_id" {
   description = "The id of the subnet to use when creating the instance resources."
   type        = string
-}
-
-variable "instance_nat_route_id" {
-  description = "the id of the route table to the nat gateway."
-  type        = string
-}
-variable "instance_nsg_ids" {
-  description = "Optional list of network security groups that the instance will be part of"
-  type        = list(string)
-  default     = []
 }
 
 variable "instance_image_id" {
