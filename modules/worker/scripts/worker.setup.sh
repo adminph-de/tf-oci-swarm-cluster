@@ -9,7 +9,7 @@ sed -i -e 's/SELINUX=enforcing/SELINUX=disable/' /etc/selinux/config
 setenforce 0
 
 # Set new Hostname
-hostnamectl set-hostname `curl -L -s http://169.254.169.254/opc/v1/instance/displayName | awk -F '-' '{print $1 "-" $2}'`
+# hostnamectl set-hostname `curl -L -s http://169.254.169.254/opc/v1/instance/displayName | awk -F '-' '{print $1 "-" $2}'`
 
 # Install Docker-CE
 yum-config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo

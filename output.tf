@@ -18,6 +18,6 @@ output "swarm_master_ip" {
   value = module.master.instance_private_ip
 }
 
-output "swarm_worker_pools" {
-  value = module.worker
-}
+# output "swarm_worker_pools" {
+# value = module.worker
+# }

@@ -5,7 +5,7 @@ fingerprint      = "10:cd:a7:82:4a:7e:eb:42:d0:70:49:19:f4:f8:14:83"
 private_key_path = "~/.oci/oci_api_key.flscloud.pem"
 region           = "us-ashburn-1"
 
-# Defaults
+# Global Defaults
 label_prefix        = "oc2-hpc-swarm"
 label_postfix       = "p"
 ssh_public_key      = ""
@@ -15,7 +15,7 @@ compartment_id      = "ocid1.compartment.oc1..aaaaaaaaensqjpvvvudpci3mubpsh3k5am
 vcn_id              = "ocid1.vcn.oc1.iad.amaaaaaanilxufiaatesgwfvnmux2t5eukj5fh64uw3fe5hg7z5fb46ejbcq"
 subnet_id           = "ocid1.subnet.oc1.iad.aaaaaaaarfdqjbbtcdrecmmdmri63c6odcqfkn4x3jfnwz3ac2viclijpzjq"
 image_id            = "ocid1.image.oc1.iad.aaaaaaaanduaanydig5trp6s2pw2mn5lchwyqramyfjzezcarcdqry7yeo7a" # Region: us-ashburn-1, OS: CentOS-7-2021.03.16-0) default = Oracle
-shape = {
+instance_shape = {
   shape            = "VM.Standard.E3.Flex",
   ocpus            = 2,
   memory           = 12,
@@ -38,29 +38,51 @@ master_image_id       = ""   # optional, default = var.image_id
 master_shape          = {}   # optional, default = var.shape_id
 
 # Swarm WORKER pool(s)
+# Define and add your worker pools to the deployment.
+# use a list object (example):
+# nogpu01 = {
+#     enabled        = true
+#     node_count     = 1
+#     region         = ""
+#     ad             = 1
+#     compartment_id = ""
+#     os_upgrade     = true
+#     vcn_id         = "" 
+#     subnet_id      = ""
+#     image_id       = ""
+#     instance_shape = {
+#       shape            = "VM.Standard.E3.Flex",
+#       ocpus            = 4,
+#       memory           = 128,
+#       boot_volume_size = 100
+#     }
+# }
+
 worker_map = {
-    nogpu01 = {
+  nogpu01 = {
     enabled        = true
-    node_count     = 2
+    node_count     = 3
+    region         = ""   # optional, default = var.region
+    ad             = 2 
     compartment_id = ""   # optional, default = var.compartment_id
     os_upgrade     = false
-    ad             = 1  
     vcn_id         = ""   # optional, default = var.vnc_id
     subnet_id      = ""   # optional, default = var.subnet_id
     image_id       = ""   # optional, default = var.image_id
-    shape          = {}   # optional, default = var.shape_id
+    worker_shape   = {}   # optional, default = var.shape_id
   }
   nogpu02 = {
     enabled        = true
-    node_count     = 0
+    node_count     = 3
+    region         = ""   # optional, default = var.region
+    ad             = 2 
     compartment_id = ""   # optional, default = var.compartment_id
-    os_upgrade     = false
-    ad             = 2  
+    os_upgrade     = false 
     vcn_id         = ""   # optional, default = var.vnc_id
     subnet_id      = ""   # optional, default = var.subnet_id
     image_id       = ""   # optional, default = var.image_id
-    shape = {
-        shape            = "VM.Standard.E3.Flex",
+    worker_shape   = {
+      shape            = "VM.Standard2.16",
       ocpus            = 8,
       memory           = 128,
       boot_volume_size = 200

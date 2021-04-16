@@ -34,7 +34,11 @@ resource "oci_core_instance" "instance" {
     create = "60m"
   }
   lifecycle {
-    ignore_changes = [source_details[0].source_id]
+    ignore_changes = [
+      source_details[0].source_id,
+      # disbale if a script content changed
+      metadata
+    ]
   }
   count = var.instance_enabled == true ? 1 : 0
 }

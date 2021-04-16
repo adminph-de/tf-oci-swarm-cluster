@@ -139,7 +139,7 @@ chmod +x /var/nfsshare/worker.join.sh
 touch /var/log/oci-swarm.log
 chown opc.opc /var/log/oci-swarm.log
 chmod 644 /var/log/oci-swarm.log
-bash -c "(crontab -u opc -l; echo \"*/10 * * * * /var/nfsshare/.docker/note.lable.sh `curl -L -s http://169.254.169.254/opc/v1/instance/canonicalRegionName` >> /var/log/oci-swarm.log 2>&1\") | crontab -u opc -"
+bash -c "(crontab -u opc -l; echo \"*/10 * * * * /var/nfsshare/.docker/note.lable.sh >> /var/log/oci-swarm.log 2>&1\") | crontab -u opc -"
 cat << EOF > /etc/logrotate.d/oci-swarm
 /var/log/oci-swarm.log {
     monthly

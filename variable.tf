@@ -19,7 +19,7 @@ variable "image_id" {
   default     = "Oracle"
   description = "Default is set to Oracle Linux."
 }
-variable "shape" {
+variable "instance_shape" {
   type = object({
     shape            = string
     ocpus            = number

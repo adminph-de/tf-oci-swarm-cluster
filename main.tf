@@ -11,7 +11,7 @@ module "master" {
   instance_vcn_id                     = var.master_vcn_id != "" ? var.master_vcn_id : var.vcn_id
   instance_subnet_id                  = var.master_subnet_id != "" ? var.master_subnet_id : var.subnet_id
   instance_image_id                   = var.master_image_id != "" ? var.master_image_id : var.image_id
-  instance_shape                      = var.master_shape != {} ? var.master_shape : var.shape
+  instance_shape                      = var.master_shape != {} ? var.master_shape : var.instance_shape
   instance_upgrade                    = var.master_os_upgrade
   instance_ssh_public_key             = var.ssh_public_key
   instance_ssh_public_key_path        = var.ssh_public_key_path
@@ -31,7 +31,7 @@ module "worker" {
 
   instance_enabled                    = each.value.enabled
   instance_tenancy_ocid               = var.tenancy_ocid
-  instance_region                     = var.region
+  instance_region                     = each.value.region != "" ? each.value.region : var.region
   instance_swarm_worker_count         = each.value.node_count
   instance_swarm_master_ip            = module.master.instance_private_ip
   instance_label_prefix               = var.label_prefix
@@ -41,7 +41,7 @@ module "worker" {
   instance_vcn_id                     = each.value.vcn_id != "" ? each.value.vcn_id : var.vcn_id
   instance_subnet_id                  = each.value.subnet_id != "" ? each.value.subnet_id : var.subnet_id
   instance_image_id                   = each.value.image_id != "" ? each.value.image_id : var.image_id
-  instance_shape                      = each.value.shape != {} ? each.value.shape : var.shape
+  instance_shape                      = each.value.worker_shape != {} ? each.value.worker_shape : var.instance_shape
   instance_upgrade                    = each.value.os_upgrade
   instance_ssh_public_key             = var.ssh_public_key
   instance_ssh_public_key_path        = var.ssh_public_key_path

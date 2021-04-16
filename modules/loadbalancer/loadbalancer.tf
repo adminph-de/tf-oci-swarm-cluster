@@ -100,7 +100,8 @@ resource "oci_load_balancer_rule_set" "oci_swarm_rule_set_80_443" {
   }
   load_balancer_id = oci_load_balancer_load_balancer.swarm[0].id
   name             = "ociSwarmRedirectHttpToHttps"
-  count            = var.loadbalancer_enabled == true ? 1 : 0
+
+  count = var.loadbalancer_enabled == true ? 1 : 0
 }
 
 resource "oci_load_balancer_hostname" "oci_swarm_hostname" {
