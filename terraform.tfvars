@@ -22,7 +22,7 @@ instance_shape = {
   boot_volume_size = 50
 }
 
-# Integrate a provate OCI Repo (optional)
+# Integrate a private OCI Repo (optional)
 oci_repo_enable               = true
 oci_repo_server               = "fra.ocir.io"
 oci_repo_username             = "flscloud/hpcuser"
@@ -40,7 +40,8 @@ master_shape          = {}   # optional, default = var.shape_id
 # Swarm WORKER pool(s)
 # Define and add your worker pools to the deployment.
 # use a list object (example):
-# nogpu01 = {
+# - comment: ocpus, and memory is only needed for FLEX types.
+# micro01 = {
 #     enabled        = true
 #     node_count     = 1
 #     region         = ""
@@ -50,18 +51,18 @@ master_shape          = {}   # optional, default = var.shape_id
 #     vcn_id         = "" 
 #     subnet_id      = ""
 #     image_id       = ""
-#     instance_shape = {
-#       shape            = "VM.Standard.E3.Flex",
-#       ocpus            = 4,
-#       memory           = 128,
-#       boot_volume_size = 100
+#     worker_shape   = {
+#       shape            = "VM.Standard.E2.1.Micro",
+#       ocpus            = 1,
+#       memory           = 2,
+#       boot_volume_size = 20
 #     }
 # }
 
 worker_map = {
   nogpu01 = {
     enabled        = true
-    node_count     = 3
+    node_count     = 1
     region         = ""   # optional, default = var.region
     ad             = 2 
     compartment_id = ""   # optional, default = var.compartment_id
@@ -73,7 +74,7 @@ worker_map = {
   }
   nogpu02 = {
     enabled        = true
-    node_count     = 3
+    node_count     = 0
     region         = ""   # optional, default = var.region
     ad             = 2 
     compartment_id = ""   # optional, default = var.compartment_id
