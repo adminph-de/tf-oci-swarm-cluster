@@ -154,9 +154,25 @@ variable "swarm_oci_repo_auth_secret_encypted" {
   type        = string
 }
 
-variable "swarm_oci_fqdn_portainer" {
+variable "swarm_oci_swarm_fqdn" {
   description = "The URL (fqdn) where you can access the Traefic Dashboard."
   default     = "oci-traefik.mydomain.com"
   type        = string
 }
 
+variable "swarm_traefik_enabled" {
+  description = "Deploy a Swarm Traefik Proxy."
+  default     = false
+  type        = bool
+}
+variable "swarm_traefik_dashboard_login" {
+  description = "Username/Password Compination to access the Traefik Dashboard (default is set to: admin:admin)"
+  default     = "admin:$$apr1$$dcTFTl3L$$bZ4qzYwV0t5rB/1IdoCWa/"
+  type        = string
+}
+
+variable "swarm_portainer_enabled" {
+  description = "Deploy a Portainer env."
+  default     = false
+  type        = bool
+}

@@ -83,3 +83,21 @@ variable "lb_ca_certificate" {}
 variable "lb_passphrase" {}
 variable "lb_certificate_private_key" {}
 variable "lb_public_certificate" {}
+
+
+variable "traefik_enabled" {
+  description = "Deploy a Swarm Traefik Proxy."
+  default     = false
+  type        = bool
+}
+variable "traefik_dashboard_login" {
+  description = "Username/Password Compination to access the Traefik Dashboard (default is set to: admin:admin)"
+  default     = "admin:$$apr1$$dcTFTl3L$$bZ4qzYwV0t5rB/1IdoCWa/"
+  type        = string
+}
+
+variable "portainer_enabled" {
+  description = "Deploy a Portainer env."
+  default     = false
+  type        = bool
+}

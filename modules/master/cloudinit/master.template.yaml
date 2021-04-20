@@ -18,12 +18,17 @@ write_files:
     encoding: "gzip+base64"
     content: |
       ${swarm_sh_content}
-  - path: "/var/nfsshare/.docker/swarm.yaml"
-    permissions: "0600"
+  - path: "/var/nfsshare/.docker/traefik.yaml"
+    permissions: "0644"
     encoding: "gzip+base64"
     content: |
-      ${swarm_yaml_content}
-
+      ${traefik_yaml_content}
+  - path: "/var/nfsshare/.docker/portainer.yaml"
+    permissions: "0644"
+    encoding: "gzip+base64"
+    content: |
+      ${portainer_yaml_content}
+    
 runcmd:
  - bash /root/instance.sh
  - cat /root/cloud-init-output.log > /home/opc/instance.finish

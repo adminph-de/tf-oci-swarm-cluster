@@ -52,7 +52,7 @@ systemctl status docker-volume-netshare.service
 mkdir /var/nfsshare
 mkdir -p /var/nfsshare/.ansible
 mkdir -p /var/nfsshare/.docker
-mkdir -p /var/nfsshare/.registry
+mkdir -p /var/nfsshare/.traefik
 mkdir -p /var/nfsshare/.portainer
 mkdir -p /var/nfsshare/.ssh
 # Change the permissions of the folder
@@ -70,8 +70,9 @@ systemctl start nfs-idmap
 # Make a sharing points /var/nfsshare
 cat << 'EOF' >> /etc/exports
 /var/nfsshare            *(rw,sync,no_root_squash,no_all_squash)
+/var/nfsshare/.ansible   *(rw,sync,no_root_squash,no_all_squash)
 /var/nfsshare/.docker    *(rw,sync,no_root_squash,no_all_squash)
-/var/nfsshare/.registry  *(rw,sync,no_root_squash,no_all_squash)
+/var/nfsshare/.traefic   *(rw,sync,no_root_squash,no_all_squash)
 /var/nfsshare/.portainer *(rw,sync,no_root_squash,no_all_squash)
 EOF
 # Restart NFS service to enable the sharing

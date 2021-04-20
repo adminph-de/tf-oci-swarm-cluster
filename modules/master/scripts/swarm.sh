@@ -1,11 +1,17 @@
 #!/bin/bash
 
-# Create Log directory for Traefik Loabalancer
-mkdir -p /var/log/traefik
-# Deploy Swarm Networks for Loabalancer and Portainer agents
-docker network create -d overlay lb_network
-docker network create -d overlay agent_network
-# Deploy Traefik Loadbalancer
-docker stack deploy -c /var/nfsshare/.docker/swarm.yaml swarm
+# Deploy Traefik Loadbalancer (if enabled)
+if [ "${oci_traefik_enabled}" = true ]; then
+    docker network create -d overlay public
+    mkdir -p /var/nfsshare/.traefik/log
+    mkdir -p /var/nfsshare/.traefik/letsencrypt
+    docker stack deploy -c /var/nfsshare/.docker/traefik.yaml traefik
+    echo "Finished deployment of Traefik Loabalancer on host: `hostname --short` deployed....."
+fi
 
-echo "Traefik Loabalancer on host: `hostname --short` deployed....."
+# Deploy Portainer (if enabled)
+if [ "${oci_traefik_enabled}" = true ] && [ "${oci_portainer_enabled}" = true ]; then
+docker network create -d overlay agent_network
+docker stack deploy -c /var/nfsshare/.docker/portainer.yaml portainer
+echo "Finished deployment of Portainer on host: `hostname --short` deployed....."
+fi

@@ -1,0 +1,104 @@
+## Preperations for the configuration file:
+# docker network create -d overlay public
+
+version: "3.8"
+
+services:
+  proxy:
+    image: "traefik:latest"
+    deploy:
+      mode: global
+      placement:
+        constraints: [node.role == manager]
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        window: 120s
+      labels:
+        # Access the Traefik Dashboard (secured)
+        - "traefik.enable=true"
+        - "traefik.docker.network=public"
+        - "traefik.constraint-label=swarm"
+        - "traefik.http.routers.traefik.rule=Host(`${oci_swarm_fqdn}`) && (PathPrefix(`/traefik`) || PathPrefix(`/api`))"
+        - "traefik.http.routers.traefik.service=api@internal"
+        ## Without SSL configuration
+        - "traefik.http.routers.traefik.entrypoints=http"
+        ## With SSL configuration
+        # - "traefik.http.routers.traefik.entrypoints=https"
+        # - "traefik.http.routers.traefik.tls.certresolver=letsencryptresolver"
+        - "traefik.http.routers.traefik.middlewares=traefik-strip,traefik-auth"
+        - "traefik.http.services.traefik.loadbalancer.server.port=9999"
+        - "traefik.http.middlewares.traefik-strip.stripprefix.prefixes=/traefik"
+        ## Create a username/password combination with:
+        ## echo $(htpasswd -nb USENAME PASSWORD) | sed -e s/\\$/\\$\\$/g
+        - "traefik.http.middlewares.traefik-auth.basicauth.users=flsadmin:$$apr1$$ubaN3Ht4$$q6uKQvO/ivvV0AV8cX.wD."
+    command:
+      ## Docker swarm config
+      - "--providers.docker=true"
+      - "--providers.docker.swarmMode=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=public"
+      - "--providers.docker.constraints=Label(`traefik.constraint-label`,`swarm`)"
+      ## Configure entrypoint
+      - --entrypoints.http.address=:80
+      - --entrypoints.https.address=:443
+      - --entryPoints.http.forwardedHeaders.trustedIPs=127.0.0.1/32,10.1.22.0/24
+      ## Enable API (dashboard)
+      - "--api"
+      - "--api.dashboard=true"
+      ## SSL configuration
+      # - --certificatesresolvers.letsencryptresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
+      # - --certificatesresolvers.letsencryptresolver.acme.preferredChain="ISRG Root X1"
+      # - --certificatesresolvers.letsencryptresolver.acme.keyType="RSA4096"
+      # - "--certificatesresolvers.letsencryptresolver.acme.httpchallenge=true"
+      # - "--certificatesresolvers.letsencryptresolver.acme.httpchallenge.entrypoint=http"
+      # - "--certificatesresolvers.letsencryptresolver.acme.email=user@domaine.com"
+      # - "--certificatesresolvers.letsencryptresolver.acme.storage=/letsencrypt/acme.json"
+      ## Global HTTP -> HTTPS
+      # - "--entrypoints.web.http.redirections.entryPoint.to=http"
+      # - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      ## Traefik Logging
+      - "--accesslog"
+      - "--log"
+      - "--log.filePath=/var/log/traefik/traefik.log"
+      - "--accesslog.filepath=/var/log/traefik/access.log"
+      - "--accesslog.filters.statuscodes=200-499"
+      - "--accesslog.filters.retryattempts"
+      - "--accesslog.filters.minduration=10ms"
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+      - target: 443
+        published: 443
+        protocol: tcp
+        mode: host
+    networks:
+      - public
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "/var/nfsshare/.traefik/log:/var/log/traefik:rw"
+      # - "/var/nfsshare/.traefik/letsencrypt:/letsencrypt:rw"
+  
+  whoami:
+    image: traefik/whoami:latest
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=public"
+        - "traefik.constraint-label=swarm"
+        - "traefik.http.routers.whoami.rule=Path(`/whoami`)"
+        - "traefik.http.routers.whoami.entrypoints=http"
+        - "traefik.http.services.whoami.loadbalancer.server.port=80"
+        - "traefik.http.routers.whoami.service=whoami"
+    networks:
+      - public
+
+networks:
+  public:
+    external: true

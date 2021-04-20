@@ -80,7 +80,8 @@ data "template_file" "master_cloud_init" {
     master_setup_sh_content = base64gzip(data.template_file.master_setup[0].rendered)
     note_lable_sh_content   = base64gzip(data.template_file.note_lable_sh[0].rendered)
     swarm_sh_content        = base64gzip(data.template_file.swarm_sh[0].rendered)
-    swarm_yaml_content      = base64gzip(data.template_file.swarm_yaml[0].rendered)
+    traefik_yaml_content    = base64gzip(data.template_file.traefik_yaml[0].rendered)
+    portainer_yaml_content  = base64gzip(data.template_file.portainer_yaml[0].rendered)
   }
   count = var.instance_enabled == true ? 1 : 0
 }
@@ -104,11 +105,25 @@ data "template_file" "note_lable_sh" {
 data "template_file" "swarm_sh" {
   template = file("${path.module}/scripts/swarm.sh")
   count    = var.instance_enabled == true ? 1 : 0
-}
-data "template_file" "swarm_yaml" {
-  template = file("${path.module}/scripts/swarm.yaml")
-  count    = var.instance_enabled == true ? 1 : 0
   vars = {
-    oci_swarm_fqdn_portainer = var.swarm_oci_fqdn_portainer
+    oci_swarm_fqdn              = var.swarm_oci_swarm_fqdn
+    oci_traefik_enabled         = var.swarm_traefik_enabled
+    oci_traefik_dashboard_login = var.swarm_traefik_dashboard_login
+    oci_portainer_enabled       = var.swarm_portainer_enabled
+  }
+}
+data "template_file" "traefik_yaml" {
+  template = file("${path.module}/scripts/traefik.yaml")
+  count    = var.instance_enabled == true && var.swarm_traefik_enabled == true ? 1 : 0
+  vars = {
+    oci_swarm_fqdn              = var.swarm_oci_swarm_fqdn
+    oci_traefik_dashboard_login = var.swarm_traefik_dashboard_login
+  }
+}
+data "template_file" "portainer_yaml" {
+  template = file("${path.module}/scripts/portainer.yaml")
+  count    = var.instance_enabled == true && var.swarm_portainer_enabled == true ? 1 : 0
+  vars = {
+    oci_swarm_fqdn = var.swarm_oci_swarm_fqdn
   }
 }

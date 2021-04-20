@@ -21,7 +21,10 @@ module "master" {
   swarm_oci_repo_username             = var.oci_repo_username
   swarm_oci_repo_auth_secret          = var.oci_repo_auth_secret
   swarm_oci_repo_auth_secret_encypted = var.oci_repo_auth_secret_encypted
-  swarm_oci_fqdn_portainer            = var.lb_host_name
+  swarm_oci_swarm_fqdn                = var.lb_host_name
+  swarm_traefik_enabled               = var.traefik_enabled
+  swarm_traefik_dashboard_login       = var.traefik_dashboard_login
+  swarm_portainer_enabled             = var.portainer_enabled
 }
 
 module "worker" {
@@ -71,5 +74,4 @@ module "loadbalancer" {
   loadbalancer_ca_certificate          = file(var.lb_ca_certificate)
   loadbalancer_certificate_private_key = file(var.lb_certificate_private_key)
   loadbalancer_public_certificate      = file(var.lb_public_certificate)
-
 }
