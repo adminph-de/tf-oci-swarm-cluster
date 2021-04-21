@@ -90,6 +90,11 @@ variable "traefik_enabled" {
   default     = false
   type        = bool
 }
+variable "traefik_dashboard_fqdn" {
+  description = "FQDN of the Traefik Dashboard"
+  default     = "my-dashboard.domain.com"
+  type        = string
+}
 variable "traefik_dashboard_login" {
   description = "Username/Password Compination to access the Traefik Dashboard (default is set to: admin:admin)"
   default     = "admin:$$apr1$$dcTFTl3L$$bZ4qzYwV0t5rB/1IdoCWa/"
@@ -100,4 +105,16 @@ variable "portainer_enabled" {
   description = "Deploy a Portainer env."
   default     = false
   type        = bool
+}
+variable "portainer_fqdn" {
+  description = "FQDN of the Portainer Service"
+  default     = "my-portainer.domain.com"
+  type        = string
+
+}
+variable "portainer_edge_fqdn" {
+  description = "FQDN of the Portainer EDGE Service"
+  default     = "my-portainer-edge.domain.com"
+  type        = string
+
 }

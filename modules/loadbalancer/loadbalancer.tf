@@ -49,9 +49,10 @@ resource "oci_load_balancer_listener" "oci_swarm_listener_80" {
   load_balancer_id         = oci_load_balancer_load_balancer.swarm[0].id
   default_backend_set_name = oci_load_balancer_backend_set.oci_swarm_bes[0].name
   name                     = "oci-swarm-default-http-80"
-  hostname_names           = [oci_load_balancer_hostname.oci_swarm_hostname[0].name]
-  port                     = 80
-  protocol                 = "HTTP"
+  # hostname_names           = [oci_load_balancer_hostname.oci_swarm_hostname[0].name]
+  hostname_names = var.loadbalancer_hostname_names
+  port           = 80
+  protocol       = "HTTP"
   connection_configuration {
     idle_timeout_in_seconds = "30"
   }
@@ -64,9 +65,10 @@ resource "oci_load_balancer_listener" "oci_swarm_listener_443" {
   load_balancer_id         = oci_load_balancer_load_balancer.swarm[0].id
   default_backend_set_name = oci_load_balancer_backend_set.oci_swarm_bes[0].name
   name                     = "oci-swarm-default-https-443"
-  hostname_names           = [oci_load_balancer_hostname.oci_swarm_hostname[0].name]
-  port                     = 443
-  protocol                 = "HTTP"
+  # hostname_names           = [oci_load_balancer_hostname.oci_swarm_hostname[0].name]
+  hostname_names = var.loadbalancer_hostname_names
+  port           = 443
+  protocol       = "HTTP"
 
   connection_configuration {
     idle_timeout_in_seconds = "30"
@@ -105,15 +107,14 @@ resource "oci_load_balancer_rule_set" "oci_swarm_rule_set_80_443" {
 }
 
 resource "oci_load_balancer_hostname" "oci_swarm_hostname" {
-  #Required
-  hostname         = var.loadbalancer_hostname_name
+  hostname         = var.loadbalancer_hostname_names[count.index]
   load_balancer_id = oci_load_balancer_load_balancer.swarm[0].id
-  name             = var.loadbalancer_hostname_name
+  name             = var.loadbalancer_hostname_names[count.index]
   lifecycle {
     create_before_destroy = true
   }
 
-  count = var.loadbalancer_enabled == true ? 1 : 0
+  count = var.loadbalancer_enabled == true ? length(var.loadbalancer_hostname_names) : 0
 }
 
 resource "oci_load_balancer_certificate" "oci_swarm_certificate" {

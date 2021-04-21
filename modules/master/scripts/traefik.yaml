@@ -19,7 +19,7 @@ services:
         - "traefik.enable=true"
         - "traefik.docker.network=public"
         - "traefik.constraint-label=swarm"
-        - "traefik.http.routers.traefik.rule=Host(`${oci_swarm_fqdn}`) && (PathPrefix(`/traefik`) || PathPrefix(`/api`))"
+        - "traefik.http.routers.traefik.rule=Host(`${oci_traefik_dashboard_fqdn}`) && (PathPrefix(`/traefik`) || PathPrefix(`/api`))"
         - "traefik.http.routers.traefik.service=api@internal"
         ## Without SSL configuration
         - "traefik.http.routers.traefik.entrypoints=http"
@@ -31,7 +31,7 @@ services:
         - "traefik.http.middlewares.traefik-strip.stripprefix.prefixes=/traefik"
         ## Create a username/password combination with:
         ## echo $(htpasswd -nb USENAME PASSWORD) | sed -e s/\\$/\\$\\$/g
-        - "traefik.http.middlewares.traefik-auth.basicauth.users=flsadmin:$$apr1$$ubaN3Ht4$$q6uKQvO/ivvV0AV8cX.wD."
+        - "traefik.http.middlewares.traefik-auth.basicauth.users=${oci_traefik_dashboard_login}"
     command:
       ## Docker swarm config
       - "--providers.docker=true"
@@ -95,7 +95,7 @@ services:
         - "traefik.http.routers.whoami.rule=Path(`/whoami`)"
         - "traefik.http.routers.whoami.entrypoints=http"
         - "traefik.http.services.whoami.loadbalancer.server.port=80"
-        - "traefik.http.routers.whoami.service=whoami"
+        - "traefik.http.routers.whoami.service=whoami@docker"
     networks:
       - public
 

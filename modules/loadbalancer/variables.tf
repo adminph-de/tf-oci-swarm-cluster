@@ -42,9 +42,9 @@ variable "loadbalancer_shape" {
   type        = string
 }
 
-variable "loadbalancer_hostname_name" {
-  description = "The shape of the instance instance."
-  type        = string
+variable "loadbalancer_hostname_names" {
+  # description = "The shape of the instance instance."
+  # type        = string
 }
 
 variable "loadbalancer_swarm_backend" {

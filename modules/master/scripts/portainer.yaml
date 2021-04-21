@@ -22,21 +22,15 @@ services:
         - "traefik.enable=true"
         - "traefik.docker.network=public"
         - "traefik.constraint-label=swarm"
-        - "traefik.http.routers.portainer.rule=Host(`${oci_swarm_fqdn}`) && (PathPrefix(`/portainer`) || PathPrefix(`/api`))"
+        - "traefik.http.routers.portainer.rule=Host(`${oci_portainer_fqdn}`)"
         - "traefik.http.routers.portainer.entrypoints=http"
-        - "traefik.http.routers.portainer.middlewares=portainer-strip"
-        - "traefik.http.middlewares.portainer-strip.stripprefix.prefixes=/portainer"
-        - "traefik.http.middlewares.portainer-strip.stripprefix.forceslash=true"
         - "traefik.http.services.portainer.loadbalancer.server.port=9000"
-        - "traefik.http.routers.portainer.service=portainer"
+        - "traefik.http.routers.portainer.service=portainer@docker"
         # Edge
-        - "traefik.http.routers.edge.rule=Host(`${oci_swarm_fqdn}`) && (PathPrefix(`/edge`) || PathPrefix(`/api`))"
+        - "traefik.http.routers.edge.rule=Host(`${oci_edge_fqdn}`)"
         - "traefik.http.routers.edge.entrypoints=http"
-        - "traefik.http.routers.edge.middlewares=edge-strip"
-        - "traefik.http.middlewares.edge-strip.stripprefix.prefixes=/edge"
-        - "traefik.http.middlewares.portainer-strip.stripprefix.forceslash=true"
         - "traefik.http.services.edge.loadbalancer.server.port=8000"
-        - "traefik.http.routers.edge.service=edge"
+        - "traefik.http.routers.edge.service=edge@docker"
 
   agent:
     image: portainer/agent

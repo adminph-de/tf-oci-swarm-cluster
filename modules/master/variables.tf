@@ -165,6 +165,11 @@ variable "swarm_traefik_enabled" {
   default     = false
   type        = bool
 }
+variable "swarm_traefik_dashboard_fqdn" {
+  description = "The URL (fqdn) where you can access the Traefic Dashboard."
+  default     = "traefik.mydomain.com"
+  type        = string
+}
 variable "swarm_traefik_dashboard_login" {
   description = "Username/Password Compination to access the Traefik Dashboard (default is set to: admin:admin)"
   default     = "admin:$$apr1$$dcTFTl3L$$bZ4qzYwV0t5rB/1IdoCWa/"
@@ -175,4 +180,14 @@ variable "swarm_portainer_enabled" {
   description = "Deploy a Portainer env."
   default     = false
   type        = bool
+}
+variable "swarm_portainer_fqdn" {
+  description = "The URL (fqdn) where you can access Portainer."
+  default     = "portainer.mydomain.com"
+  type        = string
+}
+variable "swarm_portainer_edge_fqdn" {
+  description = "The URL (fqdn) where you can access the Ege Service."
+  default     = "edge.mydomain.com"
+  type        = string
 }

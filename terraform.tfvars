@@ -101,8 +101,11 @@ oci_repo_auth_secret_encypted = "ZmxzY2xvdWQvaHBjdXNlcjotWVFiXVNUZWxNcjdhbXo4Q3V
 # Those Settings getting applied to the MASTER Node
 # Deploy a Traefik Proxy/Loadbalancer as Ingrees Loadbalancer (optional, default is false)
 traefik_enabled         = true
+traefik_dashboard_fqdn  = "oci-traefik.cloud.flsmidth.com"
 traefik_dashboard_login = "flsadmin:$$apr1$$ubaN3Ht4$$q6uKQvO/ivvV0AV8cX.wD." # Create a username/password: echo $(htpasswd -nb USENAME PASSWORD) | sed -e s/\\$/\\$\\$/g
 
 # Those Settings getting applied to the MASTER Node
 # Deploy a Portainer Management Tool (optional, default is false, and Traefik needs to be enabled as well (traefik_enabled = true))
-portainer_enabled = true
+portainer_enabled    = true
+portainer_fqdn       = "oci-portainer.cloud.flsmidth.com"
+portainer_edge_fqdn  = "oci-portainer-edge.cloud.flsmidth.com"

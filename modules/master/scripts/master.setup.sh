@@ -92,7 +92,7 @@ echo "`hostname --ip-address | awk '{ print $1 }'` `hostname --fqdn` `hostname -
 rm -f /etc/hosts
 ln -s /var/nfsshare/hosts /etc/hosts
 
-if [ "${oci_swarm_repo_enable}" = true ]; then
+if [ "${oci_swarm_repo_enable}"== "true" ]; then
 [ ! -d /home/opc/.docker ] && mkdir /home/opc/.docker
 cat << 'EOF' > /home/opc/.docker/config.json 
 {

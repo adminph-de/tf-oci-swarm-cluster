@@ -100,23 +100,29 @@ data "template_file" "master_setup" {
 }
 data "template_file" "note_lable_sh" {
   template = file("${path.module}/scripts/node.lable.sh")
-  count    = var.instance_enabled == true ? 1 : 0
+  vars = {
+    oci_traefik_enabled        = var.swarm_traefik_enabled
+    oci_traefik_dashboard_fqdn = var.swarm_traefik_dashboard_fqdn
+    oci_portainer_enabled      = var.swarm_portainer_enabled
+    oci_portainer_fqdn         = var.swarm_portainer_fqdn
+  }
+  count = var.instance_enabled == true ? 1 : 0
 }
 data "template_file" "swarm_sh" {
   template = file("${path.module}/scripts/swarm.sh")
   count    = var.instance_enabled == true ? 1 : 0
   vars = {
-    oci_swarm_fqdn              = var.swarm_oci_swarm_fqdn
-    oci_traefik_enabled         = var.swarm_traefik_enabled
-    oci_traefik_dashboard_login = var.swarm_traefik_dashboard_login
-    oci_portainer_enabled       = var.swarm_portainer_enabled
+    oci_traefik_enabled        = var.swarm_traefik_enabled
+    oci_traefik_dashboard_fqdn = var.swarm_traefik_dashboard_fqdn
+    oci_portainer_enabled      = var.swarm_portainer_enabled
+    oci_portainer_fqdn         = var.swarm_portainer_fqdn
   }
 }
 data "template_file" "traefik_yaml" {
   template = file("${path.module}/scripts/traefik.yaml")
   count    = var.instance_enabled == true && var.swarm_traefik_enabled == true ? 1 : 0
   vars = {
-    oci_swarm_fqdn              = var.swarm_oci_swarm_fqdn
+    oci_traefik_dashboard_fqdn  = var.swarm_traefik_dashboard_fqdn
     oci_traefik_dashboard_login = var.swarm_traefik_dashboard_login
   }
 }
@@ -124,6 +130,7 @@ data "template_file" "portainer_yaml" {
   template = file("${path.module}/scripts/portainer.yaml")
   count    = var.instance_enabled == true && var.swarm_portainer_enabled == true ? 1 : 0
   vars = {
-    oci_swarm_fqdn = var.swarm_oci_swarm_fqdn
+    oci_portainer_fqdn = var.swarm_portainer_fqdn
+    oci_edge_fqdn      = var.swarm_portainer_edge_fqdn
   }
 }
