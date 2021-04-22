@@ -55,7 +55,7 @@ master_shape          = {}   # optional, default = var.shape_id
 worker_map = {
   nogpu01 = {
     enabled        = true
-    node_count     = 2
+    node_count     = 4
     region         = ""       # optional, default = var.region
     ad             = 2 
     compartment_id = ""       # optional, default = var.compartment_id
