@@ -54,7 +54,7 @@ resource "oci_load_balancer_listener" "oci_swarm_listener_80" {
   port           = 80
   protocol       = "HTTP"
   connection_configuration {
-    idle_timeout_in_seconds = "30"
+    idle_timeout_in_seconds = "3600"
   }
   rule_set_names = [oci_load_balancer_rule_set.oci_swarm_rule_set_80_443[0].name]
 
@@ -71,7 +71,7 @@ resource "oci_load_balancer_listener" "oci_swarm_listener_443" {
   protocol       = "HTTP"
 
   connection_configuration {
-    idle_timeout_in_seconds = "30"
+    idle_timeout_in_seconds = "3600"
   }
 
   ssl_configuration {
