@@ -55,8 +55,13 @@ systemctl status docker-volume-netshare.service
 [ ! -d /var/nfsshare ] && mkdir /var/nfsshare
 chmod -R 755 /var/nfsshare
 chown opc:opc /var/nfsshare
-mount -o vers=3 ${oci_swarm_master_ip}:/var/nfsshare /var/nfsshare
 echo "${oci_swarm_master_ip}:/var/nfsshare  /var/nfsshare  nfs  defaults,noatime,_netdev  0  0" >> /etc/fstab
+printf "Mounting NFS Storage ${oci_swarm_master_ip}:/var/nfsshare from Swarm Master...\n"
+until [ -e /var/nfsshare/worker.join.sh ]; do
+	printf "Waiting for NFS Server ${oci_swarm_master_ip} ....\n"
+	mount -a
+done
+printf "\n/var/nfsshare sucessfully mounted....\n"
 
 [ ! -d /home/opc/.docker ] && mkdir /home/opc/.docker
 cat << 'EOF' > /home/opc/.docker/config.json 
