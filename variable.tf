@@ -84,7 +84,6 @@ variable "lb_passphrase" {}
 variable "lb_certificate_private_key" {}
 variable "lb_public_certificate" {}
 
-
 variable "traefik_enabled" {
   description = "Deploy a Swarm Traefik Proxy."
   default     = false
